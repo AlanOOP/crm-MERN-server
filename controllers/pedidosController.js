@@ -3,7 +3,8 @@ import Pedidos from "../models/Pedidos.js";
 // Agrega un nuevo pedido
 
 const addPedido = async (req, res, next) => {
-    const pedido = new Pedidos(req.body);
+
+    const pedido = await new Pedidos(req.body);
 
     try {
         await pedido.save();
@@ -81,6 +82,8 @@ const eliminarPedido = async (req, res, next) => {
     try {
 
         const pedido = await Pedidos.findById(req.params.id);
+
+
 
         if (!pedido) {
             res.json({

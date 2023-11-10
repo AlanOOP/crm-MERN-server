@@ -1,15 +1,23 @@
 import Clientes from '../models/clientes.js';
-
 //metodo para crear un cliente
 
 const addClient = async (req, res) => {
+
     const { nombre, apellido, empresa, email, telefono } = req.body;
+
+    //verificar si existe el correo
+
+    const correoExiste = await Clientes.findOne({ email });
 
     if (!nombre || !apellido || !empresa || !email || !telefono) {
         return res.status(400).json({
             mensaje: "Todos los campos son obligatorios",
         });
-    }else{
+    } else if (correoExiste) {
+        return res.status(400).json({
+            mensaje: "El correo ya esta registrado",
+        });
+    } else {
         try {
             const cliente = new Clientes(req.body);
             await cliente.save();
@@ -36,7 +44,7 @@ const getClients = async (req, res, next) => {
         res.status(500).json({
             mensaje: "Error al obtener clientes",
         });
-        next();  
+        next();
     }
 }
 
@@ -45,12 +53,12 @@ const getClients = async (req, res, next) => {
 const getClient = async (req, res, next) => {
     try {
         const cliente = await Clientes.findById(req.params.id);
-        
-        if(!cliente){
-            res.status(404).json({
+
+        if (!cliente) {
+            return res.status(404).json({
                 mensaje: "El cliente no existe"
             });
-            
+
         }
         res.json(cliente);
 
@@ -67,7 +75,7 @@ const getClient = async (req, res, next) => {
 
 const updateClient = async (req, res, next) => {
     try {
-        const cliente = await Clientes.findOneAndUpdate({_id: req.params.id}, req.body, {
+        const cliente = await Clientes.findOneAndUpdate({ _id: req.params.id }, req.body, {
             new: true
         });
         res.json(cliente);
@@ -84,7 +92,7 @@ const updateClient = async (req, res, next) => {
 
 const deleteClient = async (req, res, next) => {
     try {
-        await Clientes.findOneAndDelete({_id: req.params.id});
+        await Clientes.findOneAndDelete({ _id: req.params.id });
         res.json({
             mensaje: "Cliente eliminado correctamente"
         });
@@ -96,7 +104,6 @@ const deleteClient = async (req, res, next) => {
         next();
     }
 }
-
 
 
 export {

@@ -13,7 +13,7 @@ const productosSchema = mongoose.Schema({
         type: String,
         trim: true
     }
-},{
+}, {
     timestamps: true
 }
 

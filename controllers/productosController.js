@@ -2,6 +2,7 @@ import Productos from "../models/Productos.js";
 import multer from "multer";
 import fs from "fs";
 
+
 //multer para subir imagenes
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -14,14 +15,13 @@ const storage = multer.diskStorage({
 });
 
 
-
 // Agrega un nuevo producto
 
-const addProducto = async (req, res) => {
+const addProducto = async (req, res, next) => {
+    const { nombre, precio } = req.body;
+
     const producto = new Productos(req.body);
 
-    const { nombre, precio} = req.body;
-    const imagen = req.file.filename;
 
 
     if (!nombre || !precio) {
@@ -34,7 +34,9 @@ const addProducto = async (req, res) => {
     else {
         try {
 
-            if(req.file.filename){
+            const imagen = req.file.filename;
+
+            if (req.file.filename) {
                 producto.imagen = imagen;
             }
 
@@ -47,6 +49,7 @@ const addProducto = async (req, res) => {
             res.status(500).json({
                 mensaje: "Error al agregar producto",
             });
+            next();
         }
     }
 };
@@ -94,26 +97,25 @@ const getProducto = async (req, res, next) => {
 
 const updateProducto = async (req, res, next) => {
 
-    
     try {
 
-        const { nombre, precio} = req.body;
-    
+        const { nombre, precio } = req.body;
+
         if (!nombre || !precio) {
             return res.status(400).json({
                 mensaje: "Todos los campos son obligatorios",
             });
         }
-        
+
         let productoOld = await Productos.findById(req.params.id);
 
-        if(req.file){
-            req.body.imagen =  req.file.filename;
+        if (req.file) {
+            req.body.imagen = req.file.filename;
             //eliminar la imagen anterior
-            if(productoOld.imagen){
+            if (productoOld.imagen) {
                 fs.unlinkSync(`./public/uploads/${productoOld.imagen}`);
             }
-        }else{
+        } else {
             req.body.imagen = productoOld.imagen;
         }
 
@@ -135,16 +137,19 @@ const updateProducto = async (req, res, next) => {
 
 const deleteProducto = async (req, res, next) => {
     try {
+
+        //validar que el id no exista en otras colecciones
+
         const producto = await Productos.findById(req.params.id);
 
         if (!producto) {
             return res.status(404).json({
                 mensaje: "El producto no existe"
             });
-
         }
 
-        if(producto.imagen){
+
+        if (producto.imagen) {
             //eliminar la imagen asociada
             fs.unlinkSync(`./public/uploads/${producto.imagen}`);
         }
@@ -162,11 +167,43 @@ const deleteProducto = async (req, res, next) => {
     }
 }
 
+const searchProducto = async (req, res, next) => {
+
+    try {
+
+        //destructuring del query y asignarle un as 
+
+        const { nombre } = req.query;
+
+
+
+        const productos = await Productos.find({ nombre: new RegExp(nombre, "i") });
+
+        if (!productos) {
+            return res.status(404).json({
+                mensaje: "No se encontraron productos"
+            });
+        }
+
+        res.json(productos);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            mensaje: "Error al obtener los productos",
+        });
+        next();
+    }
+
+}
+
+
 export {
     storage,
     addProducto,
     getProductos,
     getProducto,
     updateProducto,
-    deleteProducto
-}
+    deleteProducto,
+    searchProducto
+
+};
