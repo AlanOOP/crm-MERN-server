@@ -1,4 +1,4 @@
-import Clientes from '../models/clientes.js';
+import Clientes from '../models/Clientes.js';
 //metodo para crear un cliente
 
 const addClient = async (req, res) => {
