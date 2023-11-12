@@ -8,8 +8,11 @@ import cors from "cors";
 import clientesRoutes from "./routes/clientesRoutes.js";
 import productosRoutes from "./routes/productosRoutes.js";
 import pedidosRoutes from "./routes/pedidosRoutes.js";
+import usuariosRoutes from "./routes/usuariosRoutes.js"
 
 const app = express();
+
+dotenv.config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,23 +22,26 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 
-//cors lista blanca
-// const whitelist = ["http://localhost:3000"];
-// const corsOptions = {
-//     origin: (origin, callback) => {
-//         const existe = whitelist.some(dominio => dominio === origin);
-//         if(existe){
-//             callback(null, true);
-//         }else{
-//             callback(new Error("No permitido por CORS"));
-//         }
-//     }
-// }
-//Habilitar cors
+// Configurar CORS
+const whitelist = [process.env.FRONTEND_URL];
 
-app.use(cors());
+console.log(process.env.FRONTEND_URL);
 
-dotenv.config();
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.includes(origin)) {
+      // Puede consultar la API
+      callback(null, true);
+    } else {
+      // No esta permitido
+      callback(new Error("Error de Cors"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
+
+
 
 //metodo conexion base de datos
 conectDB();
@@ -45,10 +51,13 @@ conectDB();
 app.use("/api/clientes", clientesRoutes);
 app.use("/api", productosRoutes);
 app.use("/api", pedidosRoutes);
+app.use("/api", usuariosRoutes);
 
-app.listen(3000, () => {
-    console.log("Servidor escuchando en el puerto 3000");
-});
+const PORT = process.env.PORT || 3000;
+
+const servidor = app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
+  });
 
 app.get("/", (req, res) => {
     res.send("Hola mundo");

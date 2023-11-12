@@ -7,7 +7,7 @@ const addClient = async (req, res) => {
 
     //verificar si existe el correo
 
-    const correoExiste = await Clientes.findOne({ email });
+    const correoExiste = await Clientes.findOne({  email });
 
     if (!nombre || !apellido || !empresa || !email || !telefono) {
         return res.status(400).json({

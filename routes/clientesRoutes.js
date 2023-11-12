@@ -8,10 +8,12 @@ import {
     deleteClient
 } from "../controllers/clientesController.js";
 
+import checkAuth from "../middleware/chekAuth.js";
+
 const router = express.Router();
 
 router.post("/", addClient);
-router.get("/", getClients);
+router.get("/",checkAuth ,getClients);
 //mostrar un cliente por su ID
 router.get("/:id", getClient);
 //actualizar un cliente 

@@ -83,8 +83,6 @@ const eliminarPedido = async (req, res, next) => {
 
         const pedido = await Pedidos.findById(req.params.id);
 
-
-
         if (!pedido) {
             res.json({
                 mensaje: "No existe el pedido",

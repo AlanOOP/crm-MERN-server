@@ -60,6 +60,7 @@ const addProducto = async (req, res, next) => {
 const getProductos = async (req, res, next) => {
     try {
         const productos = await Productos.find();
+        console.log(productos);
 
         res.json(productos);
     } catch (error) {
