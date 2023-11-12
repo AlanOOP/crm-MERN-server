@@ -18,7 +18,7 @@ const router = express.Router();
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, "public/uploads/");
+      cb(null, "public/uploads");
     },
     filename: function (req, file, cb) {
       cb(null, Date.now() + "_" + file.originalname);
@@ -29,8 +29,8 @@ const upload = multer({ storage: storage });
 
 router.get('/productos', getProductos);
 router.get('/productos/:id', getProducto);
-router.post('/productos', upload.any(), addProducto);
-router.put('/productos/:id', upload.any(), updateProducto);
+router.post('/productos', upload.single('imagen'), addProducto);
+router.put('/productos/:id', upload.single('imagen'), updateProducto);
 router.delete('/productos/:id', deleteProducto);
 
 router.post('/productos/buscar', searchProducto);
