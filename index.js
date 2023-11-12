@@ -24,20 +24,15 @@ app.use(express.static("public"));
 
 // Configurar CORS
 const whitelist = [process.env.FRONTEND_URL];
-
-console.log(process.env.FRONTEND_URL);
-
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.includes(origin)) {
-      // Puede consultar la API
-      callback(null, true);
-    } else {
-      // No esta permitido
-      callback(new Error("Error de Cors"));
+    origin: function (origin, callback) {
+        if (process.env.NODE_ENV !== 'production' || whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('No permitido por CORS'))
+        }
     }
-  },
-};
+}
 
 app.use(cors(corsOptions));
 
