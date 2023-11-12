@@ -5,27 +5,17 @@ import path from "path";
 
 
 //multer para subir imagenes
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, "public/uploads/");
-//     },
-//     filename: (req, file, cb) => {
-//         const ext = file.mimetype.split("/")[1];
-//         cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
-//     },
-// });
-
-const storage = multer.diskStorage({
+var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const dir = path.join(__dirname, 'public/uploads/');
-        fs.mkdirSync(dir, { recursive: true });
-        cb(null, dir);
+        cb(null, "public/uploads");
     },
     filename: (req, file, cb) => {
         const ext = file.mimetype.split("/")[1];
         cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
     },
 });
+
+
 
 // Agrega un nuevo producto
 
