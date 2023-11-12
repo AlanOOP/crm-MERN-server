@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import conectDB from "./config/db.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 //Routes
 
@@ -15,9 +16,11 @@ const app = express();
 dotenv.config();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 //imagenes
+
+app.use(cookieParser());
 
 app.use(express.static("public"));
 
