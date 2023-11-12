@@ -6,7 +6,7 @@ import fs from "fs";
 //multer para subir imagenes
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "./public/uploads");
+        cb(null, "./uploads/");
     },
     filename: (req, file, cb) => {
         const ext = file.mimetype.split("/")[1];
