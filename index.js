@@ -34,7 +34,7 @@ const corsOptions = {
     }
 }
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 
 
@@ -50,7 +50,7 @@ app.use("/api", usuariosRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-const servidor = app.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
   });
 
