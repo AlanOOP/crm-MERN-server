@@ -1,19 +1,31 @@
 import Productos from "../models/Productos.js";
 import multer from "multer";
 import fs from "fs";
+import path from "path";
 
 
 //multer para subir imagenes
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, "public/uploads/");
+//     },
+//     filename: (req, file, cb) => {
+//         const ext = file.mimetype.split("/")[1];
+//         cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
+//     },
+// });
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "./uploads/");
+        const dir = path.join(__dirname, 'public/uploads/');
+        fs.mkdirSync(dir, { recursive: true });
+        cb(null, dir);
     },
     filename: (req, file, cb) => {
         const ext = file.mimetype.split("/")[1];
         cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
     },
 });
-
 
 // Agrega un nuevo producto
 
