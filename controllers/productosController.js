@@ -5,15 +5,15 @@ import path from "path";
 
 
 //multer para subir imagenes
-var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "public/uploads");
-    },
-    filename: (req, file, cb) => {
-        const ext = file.mimetype.split("/")[1];
-        cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
-    },
-});
+// var storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, "public/uploads");
+//     },
+//     filename: (req, file, cb) => {
+//         const ext = file.mimetype.split("/")[1];
+//         cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
+//     },
+// });
 
 
 
@@ -201,7 +201,6 @@ const searchProducto = async (req, res, next) => {
 
 
 export {
-    storage,
     addProducto,
     getProductos,
     getProducto,
